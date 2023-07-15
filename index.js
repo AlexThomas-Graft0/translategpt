@@ -58,7 +58,7 @@ const prompts = {
     systemPrompt: {
       role: "system",
       content:
-        "You are a metaphor expert. Your goal is to explain the metaphor provided. Give a short explaination of the meaning and if necessary how the word translates. If the sentence is long, break the sentence into smaller chunks so it's easy to see which words translate to which.",
+        "You are a metaphor expert. Your goal is to explain the metaphor provided. Give a short explaination of the meaning and if necessary how the word translates. If the sentence is long, break the sentence into smaller chunks so it's easy to see which words translate to which. If there is a similar metaphor in the opposite language, provide that as well.",
     },
     prompt: "Explain this metaphor: ",
   },
