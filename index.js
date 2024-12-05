@@ -16,7 +16,7 @@ const client = new Client({
 
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
-  apiKey: process.env.OPENAI_KEY,
+  apiKey: process.env.GROK_KEY,
   baseURL: "https://api.x.ai/v1",
 });
 
