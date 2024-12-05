@@ -83,6 +83,8 @@ const newMessage = async (systemPrompt, prompt, model = "grok-beta") => {
 };
 
 client.on("messageCreate", async (message) => {
+  console.log("Message received:", message.content);
+
   if (message.author.bot) return;
 
   let messageText;
@@ -92,24 +94,16 @@ client.on("messageCreate", async (message) => {
   if (message.content.startsWith("!explain: ")) {
     messageText = message.content.slice(10);
     phrase = "explain";
-  }
-
-  if (message.content.startsWith("!translate:")) {
+  } else if (message.content.startsWith("!translate:")) {
     messageText = message.content.slice(11);
     phrase = "translate";
-  }
-
-  if (message.content.startsWith("!fix my english: ")) {
+  } else if (message.content.startsWith("!fix my english: ")) {
     messageText = message.content.slice(16);
     phrase = "fixEnglish";
-  }
-
-  if (message.content.startsWith("!pronounce: ")) {
+  } else if (message.content.startsWith("!pronounce: ")) {
     messageText = message.content.slice(12);
     phrase = "pronounce";
-  }
-
-  if (message.content.startsWith("!metaphor:")) {
+  } else if (message.content.startsWith("!metaphor:")) {
     messageText = message.content.slice(10);
     phrase = "metaphor";
   }
@@ -123,6 +117,7 @@ client.on("messageCreate", async (message) => {
       model
     );
 
+    console.log("Replying with:", reply);
     message.reply(reply);
   }
 });
