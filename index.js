@@ -1,10 +1,10 @@
-const express = require("express");
+import express from "express";
+import { config } from "dotenv";
+import { Client, GatewayIntentBits } from "discord.js";
 
-require("dotenv").config();
+config();
 const app = express();
 const PORT = process.env.PORT || 3030;
-
-const { Client, GatewayIntentBits } = require("discord.js");
 
 const client = new Client({
   intents: [
@@ -13,14 +13,6 @@ const client = new Client({
     GatewayIntentBits.MessageContent,
   ],
 });
-
-const { Configuration, OpenAIApi } = require("openai");
-const configuration = new Configuration({
-  apiKey: process.env.GROK_KEY,
-  baseURL: "https://api.x.ai/v1",
-});
-
-const openai = new OpenAIApi(configuration);
 
 const prompts = {
   explain: {
@@ -71,17 +63,23 @@ client.on("ready", () => {
 
 const newMessage = async (systemPrompt, prompt, model = "grok-beta") => {
   console.log([systemPrompt, { role: "user", content: `${prompt}` }], model);
-  const response = await openai.createChatCompletion({
-    model: model,
-    messages: [systemPrompt, { role: "user", content: `${prompt}` }],
-    temperature: 0.6,
-    top_p: 1,
-    frequency_penalty: 0,
-    presence_penalty: 0,
-    n: 1,
-    stream: false,
+
+  const response = await fetch("https://api.x.ai/v1/chat/completions", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${process.env.GROK_KEY}`, // Use environment variable for security
+    },
+    body: JSON.stringify({
+      messages: [systemPrompt, { role: "user", content: `${prompt}` }],
+      model: model,
+      stream: false,
+      temperature: 0.6,
+    }),
   });
-  return response.data.choices[0].message.content;
+
+  const data = await response.json();
+  return data.choices[0].message.content;
 };
 
 client.on("messageCreate", async (message) => {
