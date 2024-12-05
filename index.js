@@ -17,6 +17,7 @@ const client = new Client({
 const { Configuration, OpenAIApi } = require("openai");
 const configuration = new Configuration({
   apiKey: process.env.OPENAI_KEY,
+  baseURL: "https://api.x.ai/v1",
 });
 
 const openai = new OpenAIApi(configuration);
@@ -68,7 +69,7 @@ client.on("ready", () => {
   console.log("Ready!");
 });
 
-const newMessage = async (systemPrompt, prompt, model = "gpt-3.5-turbo") => {
+const newMessage = async (systemPrompt, prompt, model = "grok-beta") => {
   console.log([systemPrompt, { role: "user", content: `${prompt}` }], model);
   const response = await openai.createChatCompletion({
     model: model,
@@ -116,13 +117,7 @@ client.on("messageCreate", async (message) => {
   }
 
   if (messageText) {
-    if (message.content.toLowerCase().includes("gpt4")) {
-      console.log("here");
-      messageText = message.content.replace("GPT4", "");
-      messageText = message.content.replace("gpt4", "");
-      console.log({ messageText });
-      model = "gpt-4";
-    }
+    model = "grok-beta";
 
     const reply = await newMessage(
       prompts[phrase].systemPrompt,
